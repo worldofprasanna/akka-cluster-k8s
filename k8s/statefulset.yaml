@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    run: akka-seed
+  name: akka-seed
+spec:
+  serviceName: akka-seed
+  replicas: 2
+  selector:
+    matchLabels:
+      run: akka-seed
+  template:
+    metadata:
+      labels:
+        run: akka-seed
+    spec:
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+      containers:
+        - name: akka-seed
+          image: akka-in-k8s:latest
+          imagePullPolicy: Never
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: dshm
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: SEED_NODES
+              value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          command: ["/bin/sh", "-c", "HOSTNAME=${POD_NAME}.akka-seed sbt run"]
+          ports:
+            - containerPort: 2551
+              protocol: TCP
