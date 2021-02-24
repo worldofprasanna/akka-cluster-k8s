@@ -33,8 +33,12 @@ HOSTNAME=localhost sbt run
 
 # To deploy it to the local k8s
 cd k8s
-kubectl create -f .
 
+# To create Seed Nodes
+kubectl apply -f seed-nodes.yaml
+
+# To create client node
+kubectl apply -f client-1.yaml
 ```
 
 ## Maintainers
