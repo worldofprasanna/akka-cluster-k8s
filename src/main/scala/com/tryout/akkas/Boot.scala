@@ -13,6 +13,8 @@ object Boot extends App {
           s"""
              |akka.remote.artery.canonical.hostname = $hostname
              |akka.remote.artery.canonical.port = $port
+             |akka.remote.artery.bind.hostname = local.address
+             |akka.remote.artery.bind.port = 2551
              |akka.cluster.seed-nodes = $seedNodes
           """.stripMargin
         ).withFallback(ConfigFactory.load("application.conf"))
@@ -22,7 +24,7 @@ object Boot extends App {
   val port = sys.env.getOrElse("PORT", "2551")
   val hostname = sys.env.getOrElse("HOSTNAME", "localhost")
   val seedNodeIPs = sys.env.getOrElse("SEED_NODES", "akka0.akka.seed")
-  val seedNodes = seedNodeIPs.split(",").map{ip => s""""akka://MyAkkaCluster@$ip:2551""""}.mkString(",")
+  val seedNodes = seedNodeIPs.split(",").map{ip => s""""akka://MyAkkaCluster@${ip.trim}:2551""""}.mkString(",")
   println(s"Hostname: $hostname, port: $port, seedNodes: $seedNodes")
 
   startCluster(hostname, port, s"[$seedNodes]")
