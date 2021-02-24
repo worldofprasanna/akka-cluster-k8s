@@ -13,8 +13,6 @@ object Boot extends App {
           s"""
              |akka.remote.artery.canonical.hostname = $hostname
              |akka.remote.artery.canonical.port = $port
-             |akka.remote.artery.bind.hostname = local.address
-             |akka.remote.artery.bind.port = 2551
              |akka.cluster.seed-nodes = $seedNodes
           """.stripMargin
         ).withFallback(ConfigFactory.load("application.conf"))

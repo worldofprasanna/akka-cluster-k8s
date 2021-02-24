@@ -13,4 +13,6 @@ RUN apt install -y fakeroot
 
 ADD . .
 
-CMD ["sbt", "stage"]
+RUN sbt compile
+
+CMD ["sbt", "run"]
